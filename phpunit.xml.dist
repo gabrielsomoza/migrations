@@ -3,7 +3,7 @@
 <phpunit colors="true" bootstrap="tests/bootstrap.php">
     <testsuites>
         <testsuite name="Doctrine2 Database Migrations Test Suite">
-            <directory>./tests/Doctrine/</directory>
+            <directory>./tests/Migrations/</directory>
         </testsuite>
     </testsuites>
 
