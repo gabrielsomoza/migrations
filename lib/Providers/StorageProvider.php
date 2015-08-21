@@ -19,6 +19,7 @@
 
 namespace Doctrine\DBAL\Migrations\Providers;
 use Baleen\Cli\Container\ServiceProvider\StorageProvider as BaseStorageProvider;
+use Baleen\Cli\Container\Services;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\DBAL\Migrations\Entity\VersionEntityFactoryInterface;
@@ -33,7 +34,7 @@ class StorageProvider extends ServiceProvider
 {
 
     protected $provides = [
-        BaseStorageProvider::SERVICE_STORAGE
+        Services::STORAGE
     ];
 
     /**
@@ -47,7 +48,7 @@ class StorageProvider extends ServiceProvider
     {
         $container = $this->getContainer();
         $container->singleton(
-            BaseStorageProvider::SERVICE_STORAGE,
+            Services::STORAGE,
             function (VersionEntityFactoryInterface $versionFactory, ObjectManager $om, ObjectRepository $repository) {
                 return new DoctrineStorage($versionFactory, $om, $repository);
             }

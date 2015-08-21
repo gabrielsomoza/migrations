@@ -25,28 +25,18 @@ use Baleen\Cli\Command\InitCommand;
 use Baleen\Cli\Command\Repository\AbstractRepositoryCommand;
 use Baleen\Cli\Command\Storage\AbstractStorageCommand;
 use Baleen\Cli\Command\Timeline\AbstractTimelineCommand;
-use Baleen\Cli\Container\ServiceProvider\AppConfigProvider;
-use Baleen\Cli\Container\ServiceProvider\CommandsProvider;
-use Baleen\Cli\Container\ServiceProvider\HelperSetProvider;
-use Baleen\Cli\Container\ServiceProvider\RepositoryProvider;
-use Baleen\Cli\Container\ServiceProvider\StorageProvider;
-use Baleen\Cli\Container\ServiceProvider\TimelineProvider;
+use Baleen\Cli\Container\ServiceProvider\DefaultProvider;
+use Baleen\Cli\Container\Services;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Doctrine\DBAL\Migrations\Application;
-use League\Container\ServiceProvider;
 use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * Class ApplicationProvider
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class ApplicationProvider extends ServiceProvider
+class ApplicationProvider extends DefaultProvider
 {
-
-    protected $provides = [
-        BaseApplication::class
-    ];
-
     /**
      * Use the register method to register items with the container via the
      * protected $this->container property or the `getContainer` method
@@ -58,32 +48,13 @@ class ApplicationProvider extends ServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->singleton(BaseApplication::class, function(array $commands, HelperSet $helperSet) {
+        $container->singleton(Services::APPLICATION, function(array $commands, HelperSet $helperSet) {
             return new Application($commands, $helperSet);
         })->withArguments([
-            CommandsProvider::SERVICE_COMMANDS,
-            HelperSetProvider::SERVICE_HELPERSET,
+            Services::COMMANDS,
+            Services::HELPERSET,
         ]);
 
-        $container->singleton(DefaultComparator::class);
-
-        // register inflectors for the different types of commands
-        $container->inflector(AbstractRepositoryCommand::class)
-            ->invokeMethod('setRepository', [RepositoryProvider::SERVICE_REPOSITORY])
-            ->invokeMethod('setFilesystem', [RepositoryProvider::SERVICE_FILESYSTEM]);
-
-        $container->inflector(AbstractCommand::class)
-            ->invokeMethod('setComparator', [DefaultComparator::class])
-            ->invokeMethod('setConfig', [AppConfigProvider::SERVICE_CONFIG]);
-
-        $container->inflector(AbstractStorageCommand::class)
-            ->invokeMethod('setStorage', [StorageProvider::SERVICE_STORAGE]);
-
-        $container->inflector(AbstractTimelineCommand::class)
-            ->invokeMethod('setTimeline', [TimelineProvider::SERVICE_TIMELINE])
-            ->invokeMethod('setStorage', [StorageProvider::SERVICE_STORAGE]);
-
-        $container->inflector(InitCommand::class)
-            ->invokeMethod('setConfigStorage', [AppConfigProvider::SERVICE_CONFIG_STORAGE]);
+        parent::register(); // won't register application again
     }
 }
