@@ -13,7 +13,7 @@
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "Doctrine\\DBAL\\Migrations": "lib"
+            "Doctrine\\DBAL\\Migrations\\": "lib"
         }
     },
     "require": {
