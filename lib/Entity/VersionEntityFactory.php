@@ -27,11 +27,11 @@ class VersionEntityFactory implements VersionEntityFactoryInterface
 {
     /**
      * @param string $id
-     * @return VersionEntityInterface
+     * @return VersionInterface
      */
     public function create($id)
     {
-        $entity = new VersionEntity();
+        $entity = new Version();
         $entity->setId($id);
         return $entity;
     }

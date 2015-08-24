@@ -24,18 +24,22 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Version
  * @author Gabriel Somoza <gabriel@strategery.io>
- * @ORM\Entity(table_name="versions")
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="versions")
  */
-class VersionEntity implements VersionEntityInterface
+class Version implements VersionInterface
 {
+
     /**
-     * @var int
-     * @ORM\Id
+     * @ORM\Column(type="string")
+     * @ORM\Id()
+     * @var string
      */
     protected $id;
 
     /**
-     * @return int
+     * @return string
      */
     public function getId()
     {

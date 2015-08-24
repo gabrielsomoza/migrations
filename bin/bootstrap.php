@@ -67,4 +67,5 @@ foreach ($appConfig->getProviders() as $name => $class) {
 
 /** @var Application $app */
 $app = $container->get(Services::APPLICATION);
+$app->setHelperSet($container->get(Services::HELPERSET));
 $app->run();

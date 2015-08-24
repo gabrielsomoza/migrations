@@ -20,10 +20,10 @@
 namespace Doctrine\DBAL\Migrations\Entity;
 
 /**
- * Interface VersionEntityInterface
+ * Interface VersionInterface
  * @package Doctrine\DBAL\Migrations\Entity
  */
-interface VersionEntityInterface
+interface VersionInterface
 {
     /**
      * @return string

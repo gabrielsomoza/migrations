@@ -24,6 +24,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\DBAL\Migrations\Entity\VersionEntityFactoryInterface;
 use Doctrine\DBAL\Migrations\Storage\DoctrineStorage;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use League\Container\ServiceProvider;
 
 /**
@@ -49,12 +50,12 @@ class StorageProvider extends ServiceProvider
         $container = $this->getContainer();
         $container->singleton(
             Services::STORAGE,
-            function (VersionEntityFactoryInterface $versionFactory, ObjectManager $om, ObjectRepository $repository) {
-                return new DoctrineStorage($versionFactory, $om, $repository);
+            function (VersionEntityFactoryInterface $versionFactory, ObjectManager $em, ObjectRepository $repo) {
+                return new DoctrineStorage($versionFactory, $em, $repo);
             }
         )->withArguments([
             EntityProvider::SERVICE_ENTITY_FACTORY,
-            DoctrineProvider::SERVICE_OBJECT_MANAGER,
+            DoctrineProvider::SERVICE_ENTITY_MANAGER,
             DoctrineProvider::SERVICE_VERSIONS_REPOSITORY,
         ]);
     }

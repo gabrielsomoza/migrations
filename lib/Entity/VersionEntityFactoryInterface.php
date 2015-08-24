@@ -28,7 +28,7 @@ interface VersionEntityFactoryInterface
 
     /**
      * @param string $id
-     * @return VersionEntityInterface
+     * @return VersionInterface
      */
     public function create($id);
 }

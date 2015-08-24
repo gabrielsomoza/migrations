@@ -26,9 +26,8 @@ use Baleen\Migrations\Version;
 use Baleen\Migrations\Version\Collection\MigratedVersions;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\DBAL\Migrations\Entity\VersionEntityFactoryInterface as VersionFactory;
-use Doctrine\DBAL\Migrations\Entity\VersionEntityInterface;
+use Doctrine\DBAL\Migrations\Entity\VersionInterface;
 
 /**
  * Class DoctrineStorage
@@ -48,22 +47,13 @@ class DoctrineStorage extends AbstractStorage
 
     /**
      * @param VersionFactory $versionFactory
-     * @param ObjectManager|null $om
-     * @param ObjectRepository|null $repository
+     * @param ObjectManager $om
+     * @param ObjectRepository $repository
      */
-    public function __construct(
-        VersionFactory $versionFactory,
-        ObjectManager $om = null,
-        ObjectRepository $repository = null
-    ) {
+    public function __construct(VersionFactory $versionFactory, ObjectManager $om, ObjectRepository $repository) {
         $this->versionFactory = $versionFactory;
-
-        if (null !== $om) {
-            $this->setObjectManager($om);
-        }
-        if (null !== $repository) {
-            $this->setRepository($repository);
-        }
+        $this->setObjectManager($om);
+        $this->setRepository($repository);
     }
 
     /**
@@ -72,7 +62,7 @@ class DoctrineStorage extends AbstractStorage
     protected function doFetchAll()
     {
         $items = $this->repository->findAll();
-        return array_map(function(VersionEntityInterface $item) {
+        return array_map(function(VersionInterface $item) {
             return new Version($item->getId());
         }, $items);
     }
@@ -101,7 +91,7 @@ class DoctrineStorage extends AbstractStorage
      * Adds a version into storage
      * @param Version $version
      * @param bool $flush
-     * @return VersionEntityInterface Returns the saved entity or false
+     * @return VersionInterface Returns the saved entity or false
      * @throws StorageException
      */
     public function save(Version $version, $flush = true)
@@ -113,7 +103,7 @@ class DoctrineStorage extends AbstractStorage
             ));
         }
 
-        /** @var VersionEntityInterface $entity */
+        /** @var VersionInterface $entity */
         $entity = new $this->versionFactory();
         $entity->setId($version->getId());
         $this->om->persist($entity);
@@ -129,7 +119,7 @@ class DoctrineStorage extends AbstractStorage
      * Removes a version from storage
      * @param Version $version
      * @param bool $flush
-     * @return VersionEntityInterface The deleted entity
+     * @return VersionInterface The deleted entity
      * @throws StorageException
      */
     public function delete(Version $version, $flush = true)

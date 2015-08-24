@@ -17,7 +17,17 @@
  * <http://www.doctrine-project.org>.
  */
 namespace Doctrine\DBAL\Migrations\Providers;
+use Baleen\Cli\Container\Services;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DBAL\Migrations\Entity\Version;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Tools\Setup;
 use League\Container\ServiceProvider;
+use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * Class DoctrineProvider
@@ -25,11 +35,14 @@ use League\Container\ServiceProvider;
  */
 class DoctrineProvider extends ServiceProvider
 {
-    const SERVICE_OBJECT_MANAGER = 'doctrine.migrations.object_manager';
+    const SERVICE_ENTITY_MANAGER = 'doctrine.migrations.entity_manager';
+    const SERVICE_DEFAULT_ENTITY_MANAGER = 'doctrine.migrations.entity_manager.default';
+    const SERVICE_CONNECTION = 'doctrine.migrations.connection';
     const SERVICE_VERSIONS_REPOSITORY = 'doctrine.migrations.repository.versions';
 
     protected $provides = [
-        self::SERVICE_OBJECT_MANAGER,
+        self::SERVICE_CONNECTION,
+        self::SERVICE_ENTITY_MANAGER,
         self::SERVICE_VERSIONS_REPOSITORY,
     ];
 
@@ -44,8 +57,44 @@ class DoctrineProvider extends ServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->singleton(self::SERVICE_OBJECT_MANAGER, function() {
+        $container->singleton(self::SERVICE_DEFAULT_ENTITY_MANAGER, function() {
+            $paths = array(
+                realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "/../Entity"]))
+            );
 
+            // the connection configuration
+            // TODO: load it from the config file
+            $dbParams = array(
+                'driver'   => 'pdo_mysql',
+                'user'     => 'root',
+                'password' => 'pentium',
+                'dbname'   => 'doctrinemigrations',
+            );
+
+            $config = Setup::createAnnotationMetadataConfiguration($paths, true, null, null, false);
+            $em = EntityManager::create($dbParams, $config);
+
+            return $em;
         });
+
+        $container->singleton(self::SERVICE_CONNECTION, function (HelperSet $helperSet) {
+            /** @var \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper $connection */
+            $connection = $helperSet->get('db');
+            return $connection ? $connection->getConnection() : null;
+        })->withArgument(Services::HELPERSET);
+
+        $container->singleton(self::SERVICE_ENTITY_MANAGER, function (HelperSet $helperSet) {
+            /** @var \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper $em */
+            $em = $helperSet->get('em');
+            return $em ? $em->getEntityManager() : null;
+        })->withArgument(Services::HELPERSET);
+
+         $container->singleton(
+            self::SERVICE_VERSIONS_REPOSITORY,
+            function (ObjectManager $om) {
+                $repository = $om->getRepository(Version::class);
+                return $repository;
+            }
+        )->withArgument(DoctrineProvider::SERVICE_ENTITY_MANAGER);
     }
 }
