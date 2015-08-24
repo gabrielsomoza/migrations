@@ -1,0 +1,5 @@
+connection:
+  driver: pdo_mysql
+  dbname: doctrinemigrations
+  user: root
+  password: pentium

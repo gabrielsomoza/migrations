@@ -46,8 +46,8 @@ if (!$composerAutoloader = $findAutoloader()) {
 }
 
 use Baleen\Cli\Application;
-use Baleen\Cli\Container\ServiceProvider\AppConfigProvider;
 use Baleen\Cli\Container\Services;
+use Doctrine\DBAL\Migrations\Providers\AppConfigProvider;
 use League\Container\Container;
 
 $container = new Container();

@@ -22,6 +22,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DBAL\Migrations\Config\AppConfig;
 use Doctrine\DBAL\Migrations\Entity\Version;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
@@ -57,25 +58,23 @@ class DoctrineProvider extends ServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->singleton(self::SERVICE_DEFAULT_ENTITY_MANAGER, function() {
+        $container->singleton(self::SERVICE_DEFAULT_ENTITY_MANAGER, function(AppConfig $config) {
             $paths = array(
                 realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "/../Entity"]))
             );
 
             // the connection configuration
-            // TODO: load it from the config file
-            $dbParams = array(
-                'driver'   => 'pdo_mysql',
-                'user'     => 'root',
-                'password' => 'pentium',
-                'dbname'   => 'doctrinemigrations',
-            );
+            $dbParams = $config->getConnectionParams();
+
+            if (empty($dbParams)) {
+                // TODO: show a message asking user to init
+            }
 
             $config = Setup::createAnnotationMetadataConfiguration($paths, true, null, null, false);
             $em = EntityManager::create($dbParams, $config);
 
             return $em;
-        });
+        })->withArgument(Services::CONFIG);
 
         $container->singleton(self::SERVICE_CONNECTION, function (HelperSet $helperSet) {
             /** @var \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper $connection */

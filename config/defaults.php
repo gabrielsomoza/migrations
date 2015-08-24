@@ -5,5 +5,6 @@ return [
         'directory' => 'migrations',
         'namespace' => 'Migrations',
     ],
-    'storage_file' => '.baleen_versions',
+    'connection' => [
+    ],
 ];

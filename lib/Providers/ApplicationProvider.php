@@ -55,6 +55,6 @@ class ApplicationProvider extends DefaultProvider
             Services::HELPERSET,
         ]);
 
-        parent::register(); // won't register application again
+        parent::register(); // register inflectors (won't register application again)
     }
 }
