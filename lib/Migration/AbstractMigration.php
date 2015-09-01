@@ -80,7 +80,12 @@ abstract class AbstractMigration extends SimpleMigration implements TransactionA
     public function finish()
     {
         if ($this->isTransactionActive()) {
-            $this->getConnection()->commit();
+            if ($this->getOptions()->isDryRun()) {
+                $this->getConnection()->rollBack();
+            } else {
+                $this->getObjectManager()->flush();
+                $this->getConnection()->commit();
+            }
         }
     }
 
