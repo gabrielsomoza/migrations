@@ -17,49 +17,24 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Entity;
+namespace Doctrine\DBAL\Migrations\Providers;
 
-use Doctrine\ORM\Mapping as ORM;
+use Baleen\Cli\Container\ServiceProvider\CommandsProvider as BaseCommandsProvider;
+use Baleen\Cli\Container\Services;
+use Doctrine\DBAL\Migrations\Command\Repository\CreateHandler;
 
 /**
- * Class Version
+ * Class CommandsProvider
  * @author Gabriel Somoza <gabriel@strategery.io>
- *
- * @ORM\Entity
- * @ORM\Table(name="versions")
  */
-class Version implements VersionInterface
+class CommandsProvider extends BaseCommandsProvider
 {
-
     /**
-     * @ORM\Column(type="string")
-     * @ORM\Id()
-     * @var string
+     * __construct
      */
-    protected $id;
-
-    /**
-     * Version constructor.
-     * @param $id
-     */
-    public function __construct($id = null)
+    public function __construct()
     {
-        $this->id = (string) $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param string $id
-     */
-    public function setId($id)
-    {
-        $this->id = (string) $id;
+        $this->commands[Services::CMD_REPOSITORY_CREATE]['handler'] = CreateHandler::class;
+        parent::__construct();
     }
 }

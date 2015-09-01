@@ -20,8 +20,11 @@ namespace Doctrine\DBAL\Migrations\Providers;
 use Baleen\Cli\Container\Services;
 use Baleen\Cli\Exception\CliException;
 use Baleen\Cli\Helper\ConfigHelper;
+use Doctrine\DBAL\Migrations\Helper\ContainerHelper;
+use Doctrine\DBAL\Migrations\Helper\LazyObjectManagerHelper;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use League\Container\Container;
 use League\Container\ServiceProvider;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -49,7 +52,7 @@ class HelperSetProvider extends ServiceProvider
     public function register()
     {
         $container = $this->getContainer();
-        $container->singleton(Services::HELPERSET, function() use ($container) {
+        $container->singleton(Services::HELPERSET, function(Container $container) {
             // Support for using the Doctrine ORM convention of providing a `cli-config.php` file.
             $configFile = getcwd() . DIRECTORY_SEPARATOR . 'cli-config.php';
 
@@ -76,21 +79,17 @@ class HelperSetProvider extends ServiceProvider
             $helperSet = is_object($helperSet) ? $helperSet : new HelperSet();
 
             if (!$helperSet->has('em')) {
-                $em = $container->get(DoctrineProvider::SERVICE_DEFAULT_ENTITY_MANAGER);
-                $helperSet->set(new EntityManagerHelper($em), 'em');
-            }
-
-            if (!$helperSet->has('db')) {
-                /** @var EntityManagerHelper $emHelper */
-                $emHelper = $helperSet->get('em');
-                $helperSet->set(new ConnectionHelper($emHelper->getEntityManager()->getConnection()), 'db');
+                $helperSet->set(
+                    new LazyObjectManagerHelper($container, DoctrineProvider::SERVICE_DEFAULT_ENTITY_MANAGER)
+                    , 'em'
+                );
             }
 
             $helperSet->set($container->get(Services::HELPERSET_QUESTION), 'question');
             $helperSet->set($container->get(Services::HELPERSET_CONFIG));
 
             return $helperSet;
-        });
+        })->withArgument(Container::class);
 
         $container->add(Services::HELPERSET_QUESTION, QuestionHelper::class);
         $container->add(Services::HELPERSET_CONFIG, ConfigHelper::class)

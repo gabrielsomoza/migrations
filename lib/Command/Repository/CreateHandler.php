@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -17,49 +18,41 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Entity;
+namespace Doctrine\DBAL\Migrations\Command\Repository;
 
-use Doctrine\ORM\Mapping as ORM;
+use Baleen\Cli\Command\Repository\CreateHandler as BaseCreateHandler;
+use Doctrine\DBAL\Migrations\Migration\AbstractMigration;
+use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Generator\MethodGenerator;
 
 /**
- * Class Version
+ * Class CreateHandler
  * @author Gabriel Somoza <gabriel@strategery.io>
- *
- * @ORM\Entity
- * @ORM\Table(name="versions")
  */
-class Version implements VersionInterface
+class CreateHandler extends BaseCreateHandler
 {
-
     /**
-     * @ORM\Column(type="string")
-     * @ORM\Id()
-     * @var string
+     * Generate.
+     * @param string $className
+     * @param null $namespace
+     * @return \Zend\Code\Generator\ClassGenerator
      */
-    protected $id;
-
-    /**
-     * Version constructor.
-     * @param $id
-     */
-    public function __construct($id = null)
+    protected function generate($className, $namespace = null)
     {
-        $this->id = (string) $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param string $id
-     */
-    public function setId($id)
-    {
-        $this->id = (string) $id;
+        $class = new ClassGenerator(
+            $className,
+            $namespace,
+            null,
+            'SimpleMigration',
+            [],
+            [],
+            [
+                new MethodGenerator('up', [], 'public', 'echo \'Hello world!\';'),
+                new MethodGenerator('down', [], 'public', 'echo \'Goodbye world!\';'),
+            ]
+        );
+        $class->setExtendedClass('AbstractMigration');
+        $class->addUse(AbstractMigration::class);
+        return $class;
     }
 }

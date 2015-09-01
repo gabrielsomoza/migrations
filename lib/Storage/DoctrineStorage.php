@@ -104,8 +104,7 @@ class DoctrineStorage extends AbstractStorage
         }
 
         /** @var VersionInterface $entity */
-        $entity = new $this->versionFactory();
-        $entity->setId($version->getId());
+        $entity = $this->versionFactory->create($version->getId());
         $this->om->persist($entity);
 
         if ($flush) {

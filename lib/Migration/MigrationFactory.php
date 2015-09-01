@@ -13,53 +13,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Entity;
+namespace Doctrine\DBAL\Migrations\Migration;
 
-use Doctrine\ORM\Mapping as ORM;
+use Baleen\Migrations\Migration\Factory\FactoryInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Class Version
+ * Class MigrationFactory
  * @author Gabriel Somoza <gabriel@strategery.io>
- *
- * @ORM\Entity
- * @ORM\Table(name="versions")
  */
-class Version implements VersionInterface
+class MigrationFactory implements FactoryInterface
 {
 
-    /**
-     * @ORM\Column(type="string")
-     * @ORM\Id()
-     * @var string
-     */
-    protected $id;
+    protected $om;
 
     /**
-     * Version constructor.
-     * @param $id
+     * MigrationFactory constructor.
+     * @param $om
      */
-    public function __construct($id = null)
+    public function __construct(ObjectManager $om)
     {
-        $this->id = (string) $id;
+        $this->om = $om;
     }
 
     /**
-     * @return string
+     * Creates a AbstractMigration based on a class name.
+     *
+     * @param $class
+     *
+     * @return \Baleen\Migrations\Migration\MigrationInterface
      */
-    public function getId()
+    public function create($class)
     {
-        return $this->id;
-    }
-
-    /**
-     * @param string $id
-     */
-    public function setId($id)
-    {
-        $this->id = (string) $id;
+        /** @var AbstractMigration $migration */
+        $migration = new $class($this->om);
+        return $migration;
     }
 }

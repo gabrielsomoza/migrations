@@ -4,7 +4,9 @@ logs/
 reports/
 dist/
 tests/phpunit.xml
+tests/sandbox/
 vendor/
 composer.lock
 box.phar
+.migrations.yml
 cli-config.php

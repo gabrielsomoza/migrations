@@ -19,18 +19,18 @@
 
 namespace Doctrine\DBAL\Migrations\Providers;
 
+use Baleen\Cli\Config\ConfigStorage;
 use Baleen\Cli\Container\Services;
-use Doctrine\DBAL\Migrations\Config\AppConfig;
-use Doctrine\DBAL\Migrations\Config\ConfigStorage;
+use Doctrine\DBAL\Migrations\Config\Config;
 use League\Container\ServiceProvider;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
 /**
- * Class AppConfigProvider
+ * Class ConfigProvider
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class AppConfigProvider extends ServiceProvider
+class ConfigProvider extends ServiceProvider
 {
 
     protected $provides = [
@@ -49,20 +49,13 @@ class AppConfigProvider extends ServiceProvider
         $baleenBaseDir = $this->getContainer()->get(Services::BALEEN_BASE_DIR);
         $this->getContainer()->singleton(Services::CONFIG_STORAGE, function () use ($baseDir, $baleenBaseDir) {
             $configFiles = glob(implode(DIRECTORY_SEPARATOR, [$baleenBaseDir, 'config', '*.php']));
-            $localConfig = [];
-            foreach ($configFiles as $file) {
-                if (is_file($file)) {
-                    $fileConfig = include $file;
-                    $localConfig = array_merge_recursive($localConfig, $fileConfig);
-                }
-            }
             $configFilesystem = new Filesystem(new Local($baseDir));
-            return new ConfigStorage($configFilesystem, $localConfig);
+            return new ConfigStorage(Config::class, $configFilesystem, $configFiles);
         });
         $this->getContainer()->singleton(
             Services::CONFIG,
             function (ConfigStorage $configStorage) use ($baseDir) {
-                return $configStorage->load(AppConfig::CONFIG_FILE_NAME);
+                return $configStorage->load(Config::CONFIG_FILE_NAME);
             }
         )->withArgument(Services::CONFIG_STORAGE);
     }

@@ -5,6 +5,8 @@ return [
         'directory' => 'migrations',
         'namespace' => 'Migrations',
     ],
-    'connection' => [
-    ],
+    'storage' => [
+        'connection' => [
+        ],
+    ]
 ];

@@ -13,50 +13,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
 namespace Doctrine\DBAL\Migrations\Providers;
-use Baleen\Cli\Container\ServiceProvider\StorageProvider as BaseStorageProvider;
+
+use Baleen\Cli\Container\ServiceProvider\RepositoryProvider as BaseRepositoryProvider;
 use Baleen\Cli\Container\Services;
+use Baleen\Migrations\Repository\RepositoryInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\DBAL\Migrations\Entity\VersionEntityFactoryInterface;
-use Doctrine\DBAL\Migrations\Storage\DoctrineStorage;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use League\Container\ServiceProvider;
+use Doctrine\DBAL\Migrations\Migration\MigrationFactory;
 
 /**
- * Class StorageProvider
+ * Class RepositoryProvider
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class StorageProvider extends ServiceProvider
+class RepositoryProvider extends BaseRepositoryProvider
 {
-
-    protected $provides = [
-        Services::STORAGE
-    ];
-
     /**
-     * Use the register method to register items with the container via the
-     * protected $this->container property or the `getContainer` method
-     * from the ContainerAwareTrait.
-     *
-     * @return void
+     * Registers the custom migration factory for Doctrine
      */
     public function register()
     {
+        parent::register();
         $container = $this->getContainer();
-        $container->singleton(
-            Services::STORAGE,
-            function (VersionEntityFactoryInterface $versionFactory, ObjectManager $em, ObjectRepository $repo) {
-                return new DoctrineStorage($versionFactory, $em, $repo);
-            }
-        )->withArguments([
-            EntityProvider::SERVICE_ENTITY_FACTORY,
-            DoctrineProvider::SERVICE_OBJECT_MANAGER,
-            DoctrineProvider::SERVICE_VERSIONS_REPOSITORY,
-        ]);
+
+        $container->add(Services::MIGRATION_FACTORY, MigrationFactory::class)
+            ->withArgument(DoctrineProvider::SERVICE_OBJECT_MANAGER);
+
+        $container->inflector(RepositoryInterface::class)
+            ->invokeMethod('setMigrationFactory', [Services::MIGRATION_FACTORY]);
     }
 }

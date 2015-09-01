@@ -13,53 +13,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Entity;
+namespace Doctrine\DBAL\Migrations\Helper;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Persistence\ObjectManager;
+use League\Container\Container;
+use Symfony\Component\Console\Helper\Helper;
 
 /**
- * Class Version
+ * Class LazyObjectManagerHelper
  * @author Gabriel Somoza <gabriel@strategery.io>
- *
- * @ORM\Entity
- * @ORM\Table(name="versions")
  */
-class Version implements VersionInterface
+class LazyObjectManagerHelper extends Helper
 {
+    /** @var string */
+    protected $serviceName;
+
+    /** @var Container */
+    protected $container;
 
     /**
-     * @ORM\Column(type="string")
-     * @ORM\Id()
-     * @var string
+     * @param Container $container
+     * @param $serviceName
      */
-    protected $id;
-
-    /**
-     * Version constructor.
-     * @param $id
-     */
-    public function __construct($id = null)
+    public function __construct(Container $container, $serviceName)
     {
-        $this->id = (string) $id;
+        $this->serviceName = $serviceName;
+        $this->container = $container;
     }
 
     /**
+     * getEntityManager
+     * @return ObjectManager
+     */
+    public function getObjectManager()
+    {
+        return $this->container->get($this->serviceName);
+    }
+
+    /**
+     * getName
      * @return string
      */
-    public function getId()
+    public function getName()
     {
-        return $this->id;
-    }
-
-    /**
-     * @param string $id
-     */
-    public function setId($id)
-    {
-        $this->id = (string) $id;
+        return 'objectManager';
     }
 }

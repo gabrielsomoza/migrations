@@ -20,12 +20,12 @@ namespace Doctrine\DBAL\Migrations\Providers;
 use Baleen\Cli\Container\Services;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\DBAL\Migrations\Config\AppConfig;
+use Doctrine\DBAL\Migrations\Config\Config;
 use Doctrine\DBAL\Migrations\Entity\Version;
+use Doctrine\DBAL\Migrations\Exception\CliException;
+use Doctrine\DBAL\Migrations\Helper\LazyObjectManagerHelper;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\Setup;
 use League\Container\ServiceProvider;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -36,14 +36,14 @@ use Symfony\Component\Console\Helper\HelperSet;
  */
 class DoctrineProvider extends ServiceProvider
 {
-    const SERVICE_ENTITY_MANAGER = 'doctrine.migrations.entity_manager';
+    const SERVICE_OBJECT_MANAGER = 'doctrine.migrations.object_manager';
     const SERVICE_DEFAULT_ENTITY_MANAGER = 'doctrine.migrations.entity_manager.default';
     const SERVICE_CONNECTION = 'doctrine.migrations.connection';
     const SERVICE_VERSIONS_REPOSITORY = 'doctrine.migrations.repository.versions';
 
     protected $provides = [
         self::SERVICE_CONNECTION,
-        self::SERVICE_ENTITY_MANAGER,
+        self::SERVICE_OBJECT_MANAGER,
         self::SERVICE_VERSIONS_REPOSITORY,
     ];
 
@@ -58,7 +58,7 @@ class DoctrineProvider extends ServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->singleton(self::SERVICE_DEFAULT_ENTITY_MANAGER, function(AppConfig $config) {
+        $container->singleton(self::SERVICE_DEFAULT_ENTITY_MANAGER, function(Config $config) {
             $paths = array(
                 realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "/../Entity"]))
             );
@@ -68,6 +68,7 @@ class DoctrineProvider extends ServiceProvider
 
             if (empty($dbParams)) {
                 // TODO: show a message asking user to init
+                throw new CliException('Please configure doctrine at .doctrine.yml');
             }
 
             $config = Setup::createAnnotationMetadataConfiguration($paths, true, null, null, false);
@@ -82,10 +83,10 @@ class DoctrineProvider extends ServiceProvider
             return $connection ? $connection->getConnection() : null;
         })->withArgument(Services::HELPERSET);
 
-        $container->singleton(self::SERVICE_ENTITY_MANAGER, function (HelperSet $helperSet) {
-            /** @var \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper $em */
+        $container->singleton(self::SERVICE_OBJECT_MANAGER, function (HelperSet $helperSet) {
+            /** @var LazyObjectManagerHelper $em */
             $em = $helperSet->get('em');
-            return $em ? $em->getEntityManager() : null;
+            return $em ? $em->getObjectManager() : null;
         })->withArgument(Services::HELPERSET);
 
          $container->singleton(
@@ -94,6 +95,6 @@ class DoctrineProvider extends ServiceProvider
                 $repository = $om->getRepository(Version::class);
                 return $repository;
             }
-        )->withArgument(DoctrineProvider::SERVICE_ENTITY_MANAGER);
+        )->withArgument(DoctrineProvider::SERVICE_OBJECT_MANAGER);
     }
 }

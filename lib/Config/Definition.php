@@ -19,44 +19,33 @@
 
 namespace Doctrine\DBAL\Migrations\Config;
 
+use Baleen\Cli\Config\Definition as BaseDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Class ConfigurationDefinition.
+ * Class Definition.
  *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class ConfigurationDefinition implements ConfigurationInterface
+class Definition extends BaseDefinition
 {
     /**
-     * Generates the configuration tree builder.
-     *
-     * @return \Symfony\Component\Config\Definition\Builder\TreeBuilder The tree builder
+     * addStorageNode
+     * @return \Symfony\Component\Config\Definition\Builder\NodeDefinition
      */
-    public function getConfigTreeBuilder()
+    protected function addStorageNode()
     {
         $builder = new TreeBuilder();
-        $root = $builder->root('baleen');
-        $root->children()
-            ->arrayNode('providers')
-                ->useAttributeAsKey('name')
-                ->prototype('scalar')->end()
-            ->end()
-            ->arrayNode('migrations')
-                ->children()
-                    ->scalarNode('directory')->defaultValue('migrations')->end()
-                    ->scalarNode('namespace')->defaultValue('Migrations')->end()
-                ->end()
-            ->end()
+        $node = $builder->root('storage');
+
+        $node->children()
             ->arrayNode('connection')
                 ->treatNullLike([])
                 ->treatFalseLike([])
                 ->useAttributeAsKey('name')
                 ->prototype('scalar')->end()
-                ->end()
             ->end();
 
-        return $builder;
+        return $node;
     }
 }
