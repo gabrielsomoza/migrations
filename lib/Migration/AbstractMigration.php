@@ -22,6 +22,7 @@ namespace Doctrine\DBAL\Migrations\Migration;
 use Baleen\Migrations\Migration\Capabilities\TransactionAwareInterface;
 use Baleen\Migrations\Migration\SimpleMigration;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -55,7 +56,7 @@ abstract class AbstractMigration extends SimpleMigration implements TransactionA
     }
 
     /**
-     * getObjectManager
+     * getOm
      * @return ObjectManager
      */
     public function getObjectManager()
@@ -79,11 +80,20 @@ abstract class AbstractMigration extends SimpleMigration implements TransactionA
      */
     public function finish()
     {
+        $this->getObjectManager()->flush();
+
         if ($this->isTransactionActive()) {
             if ($this->getOptions()->isDryRun()) {
+//                $om = $this->getObjectManager();
+//                if ($om instanceof EntityManagerInterface) {
+//                    $logger = $om->getConfiguration()->getSQLLogger();
+//                    if ($logger instanceof DebugStack && $logger->enabled) {
+//                        $queries = print_r($logger->queries, true);
+//                        echo $queries;
+//                    }
+//                }
                 $this->getConnection()->rollBack();
             } else {
-                $this->getObjectManager()->flush();
                 $this->getConnection()->commit();
             }
         }

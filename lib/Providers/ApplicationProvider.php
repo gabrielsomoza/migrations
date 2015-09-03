@@ -29,6 +29,7 @@ use Baleen\Cli\Container\ServiceProvider\DefaultProvider;
 use Baleen\Cli\Container\Services;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Doctrine\DBAL\Migrations\Application;
+use Doctrine\DBAL\Migrations\Command\Util\ObjectManagerAwareInterface;
 use Symfony\Component\Console\Helper\HelperSet;
 
 /**
@@ -54,6 +55,9 @@ class ApplicationProvider extends DefaultProvider
             Services::COMMANDS,
             Services::HELPERSET,
         ]);
+
+        $container->inflector(ObjectManagerAwareInterface::class)
+            ->invokeMethod('setObjectManager', [DoctrineProvider::SERVICE_OBJECT_MANAGER]);
 
         parent::register(); // register inflectors (won't register application again)
     }

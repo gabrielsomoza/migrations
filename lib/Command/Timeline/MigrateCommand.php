@@ -17,49 +17,17 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Helper;
+namespace Doctrine\DBAL\Migrations\Command\Timeline;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use League\Container\Container;
-use Symfony\Component\Console\Helper\Helper;
+use Baleen\Cli\Command\Timeline\MigrateCommand as BaseMigrateCommand;
+use Doctrine\DBAL\Migrations\Command\Util\ObjectManagerAwareInterface;
+use Doctrine\DBAL\Migrations\Command\Util\ObjectManagerAwareTrait;
 
 /**
- * Class LazyObjectManagerHelper
+ * Class MigrateCommand
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class LazyObjectManagerHelper extends Helper
+class MigrateCommand extends BaseMigrateCommand implements ObjectManagerAwareInterface
 {
-    /** @var string */
-    protected $serviceName;
-
-    /** @var Container */
-    protected $container;
-
-    /**
-     * @param Container $container
-     * @param $serviceName
-     */
-    public function __construct(Container $container, $serviceName)
-    {
-        $this->serviceName = $serviceName;
-        $this->container = $container;
-    }
-
-    /**
-     * getEntityManager
-     * @return ObjectManager
-     */
-    public function getObjectManager()
-    {
-        return $this->container->get($this->serviceName);
-    }
-
-    /**
-     * getName
-     * @return string
-     */
-    public function getName()
-    {
-        return 'om';
-    }
+    use ObjectManagerAwareTrait;
 }

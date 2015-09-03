@@ -22,6 +22,9 @@ namespace Doctrine\DBAL\Migrations\Providers;
 use Baleen\Cli\Container\ServiceProvider\CommandsProvider as BaseCommandsProvider;
 use Baleen\Cli\Container\Services;
 use Doctrine\DBAL\Migrations\Command\Repository\CreateHandler;
+use Doctrine\DBAL\Migrations\Command\Timeline\ExecuteCommand;
+use Doctrine\DBAL\Migrations\Command\Timeline\MigrateCommand;
+use Doctrine\DBAL\Migrations\Command\Timeline\MigrateHandler;
 
 /**
  * Class CommandsProvider
@@ -35,6 +38,11 @@ class CommandsProvider extends BaseCommandsProvider
     public function __construct()
     {
         $this->commands[Services::CMD_REPOSITORY_CREATE]['handler'] = CreateHandler::class;
+        $this->commands[Services::CMD_TIMELINE_EXECUTE]['class'] = ExecuteCommand::class;
+        $this->commands[Services::CMD_TIMELINE_MIGRATE] = [
+            'class' => MigrateCommand::class,
+            'handler' => MigrateHandler::class,
+        ];
         parent::__construct();
     }
 }

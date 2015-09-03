@@ -17,49 +17,32 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Helper;
+namespace Doctrine\DBAL\Migrations\Command\Util;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use League\Container\Container;
-use Symfony\Component\Console\Helper\Helper;
 
 /**
- * Class LazyObjectManagerHelper
+ * Class ObjectManagerAwareTrait
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class LazyObjectManagerHelper extends Helper
+trait ObjectManagerAwareTrait
 {
-    /** @var string */
-    protected $serviceName;
-
-    /** @var Container */
-    protected $container;
+    /** @var ObjectManager */
+    protected $om;
 
     /**
-     * @param Container $container
-     * @param $serviceName
-     */
-    public function __construct(Container $container, $serviceName)
-    {
-        $this->serviceName = $serviceName;
-        $this->container = $container;
-    }
-
-    /**
-     * getEntityManager
      * @return ObjectManager
      */
     public function getObjectManager()
     {
-        return $this->container->get($this->serviceName);
+        return $this->om;
     }
 
     /**
-     * getName
-     * @return string
+     * @param ObjectManager $om
      */
-    public function getName()
+    public function setObjectManager(ObjectManager $om)
     {
-        return 'om';
+        $this->om = $om;
     }
 }
