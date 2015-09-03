@@ -121,7 +121,7 @@ class DoctrineStorage extends AbstractStorage
      * @return VersionInterface The deleted entity
      * @throws StorageException
      */
-    public function delete(Version $version, $flush = true)
+    public function delete(Version $version, $flush = false)
     {
         $entity = $this->repository->find($version->getId());
         if (!$entity) {

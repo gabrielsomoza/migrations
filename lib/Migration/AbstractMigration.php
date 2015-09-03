@@ -75,27 +75,34 @@ abstract class AbstractMigration extends SimpleMigration implements TransactionA
     }
 
     /**
-     * finish
+     * finish.
+     *
+     * Rules:
+     * ======
+     * # | Dry Run | Transaction || Flush | Commit | Roll Back |
+     * --+---------+-------------++-------+--------+-----------+
+     * 1 |  true   |    true     || true  |  false |   true    |
+     * 2 |  true   |    false    || false |  false |   false   |
+     * 3 |  false  |    true     || true  |  true  |   false   |
+     * 4 |  false  |    false    || true  |  false |   false   |
+     *
      * @throws \Doctrine\DBAL\ConnectionException
      */
     public function finish()
     {
-        $this->getObjectManager()->flush();
-
-        if ($this->isTransactionActive()) {
-            if ($this->getOptions()->isDryRun()) {
-//                $om = $this->getObjectManager();
-//                if ($om instanceof EntityManagerInterface) {
-//                    $logger = $om->getConfiguration()->getSQLLogger();
-//                    if ($logger instanceof DebugStack && $logger->enabled) {
-//                        $queries = print_r($logger->queries, true);
-//                        echo $queries;
-//                    }
-//                }
-                $this->getConnection()->rollBack();
-            } else {
-                $this->getConnection()->commit();
-            }
+        $dryRun = $this->getOptions()->isDryRun();
+        $isTransaction = $this->isTransactionActive();
+        $flush = !$dryRun || $isTransaction; // simplified from rule #2: !($dryRun && !$isTransaction)
+        $commit = !$dryRun && $isTransaction;
+        $rollBack = $dryRun && $isTransaction;
+        if ($flush) {
+            $this->getObjectManager()->flush();
+        }
+        if ($commit) {
+            $this->getConnection()->commit();
+        }
+        if ($rollBack) {
+            $this->getConnection()->rollBack();
         }
     }
 
