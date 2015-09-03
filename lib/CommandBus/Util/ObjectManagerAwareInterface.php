@@ -17,17 +17,25 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Command\Timeline;
+namespace Doctrine\DBAL\Migrations\CommandBus\Util;
 
-use Baleen\Cli\Command\Timeline\MigrateCommand as BaseMigrateCommand;
-use Doctrine\DBAL\Migrations\Command\Util\ObjectManagerAwareInterface;
-use Doctrine\DBAL\Migrations\Command\Util\ObjectManagerAwareTrait;
+use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Class MigrateCommand
- * @author Gabriel Somoza <gabriel@strategery.io>
+ * Interface ObjectManagerAwareInterface
+ * @package Doctrine\DBAL\Migrations\CommandBus\Util
  */
-class MigrateCommand extends BaseMigrateCommand implements ObjectManagerAwareInterface
+interface ObjectManagerAwareInterface
 {
-    use ObjectManagerAwareTrait;
+    /**
+     * setObjectManager
+     * @param ObjectManager $objectManager
+     */
+    public function setObjectManager(ObjectManager $objectManager);
+
+    /**
+     * getObjectManager
+     * @return ObjectManager
+     */
+    public function getObjectManager();
 }

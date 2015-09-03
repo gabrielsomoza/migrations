@@ -20,16 +20,16 @@
 namespace Doctrine\DBAL\Migrations\Providers;
 
 use Baleen\Cli\Application as BaseApplication;
-use Baleen\Cli\Command\AbstractCommand;
-use Baleen\Cli\Command\InitCommand;
-use Baleen\Cli\Command\Repository\AbstractRepositoryCommand;
-use Baleen\Cli\Command\Storage\AbstractStorageCommand;
-use Baleen\Cli\Command\Timeline\AbstractTimelineCommand;
+use Baleen\Cli\CommandBus\AbstractCommand;
+use Baleen\Cli\CommandBus\InitCommand;
+use Baleen\Cli\CommandBus\Repository\AbstractRepositoryCommand;
+use Baleen\Cli\CommandBus\Storage\AbstractStorageCommand;
+use Baleen\Cli\CommandBus\Timeline\AbstractTimelineCommand;
 use Baleen\Cli\Container\ServiceProvider\DefaultProvider;
 use Baleen\Cli\Container\Services;
 use Baleen\Migrations\Version\Comparator\DefaultComparator;
 use Doctrine\DBAL\Migrations\Application;
-use Doctrine\DBAL\Migrations\Command\Util\ObjectManagerAwareInterface;
+use Doctrine\DBAL\Migrations\CommandBus\Util\ObjectManagerAwareInterface;
 use Symfony\Component\Console\Helper\HelperSet;
 
 /**

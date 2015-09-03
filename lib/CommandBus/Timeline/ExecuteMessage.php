@@ -17,17 +17,17 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Command\Timeline;
+namespace Doctrine\DBAL\Migrations\CommandBus\Timeline;
 
-use Baleen\Cli\Command\Timeline\ExecuteCommand as BaseExecuteCommand;
-use Doctrine\DBAL\Migrations\Command\Util\ObjectManagerAwareInterface;
-use Doctrine\DBAL\Migrations\Command\Util\ObjectManagerAwareTrait;
+use Baleen\Cli\CommandBus\Timeline\ExecuteMessage as BaseExecuteMessage;
+use Doctrine\DBAL\Migrations\CommandBus\Util\ObjectManagerAwareInterface;
+use Doctrine\DBAL\Migrations\CommandBus\Util\ObjectManagerAwareTrait;
 
 /**
- * Class ExecuteCommand
+ * Class ExecuteMessage
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class ExecuteCommand extends BaseExecuteCommand implements ObjectManagerAwareInterface
+class ExecuteMessage extends BaseExecuteMessage implements ObjectManagerAwareInterface
 {
     use ObjectManagerAwareTrait;
 }

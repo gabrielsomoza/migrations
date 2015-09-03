@@ -21,7 +21,7 @@ use Baleen\Cli\Container\Services;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\DBAL\Migrations\Command\Util\ObjectManagerAwareInterface;
+use Doctrine\DBAL\Migrations\CommandBus\Util\ObjectManagerAwareInterface;
 use Doctrine\DBAL\Migrations\Config\Config;
 use Doctrine\DBAL\Migrations\Entity\Version;
 use Doctrine\DBAL\Migrations\Exception\CliException;

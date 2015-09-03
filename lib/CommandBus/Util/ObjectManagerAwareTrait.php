@@ -17,25 +17,32 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Command\Util;
+namespace Doctrine\DBAL\Migrations\CommandBus\Util;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Interface ObjectManagerAwareInterface
- * @package Doctrine\DBAL\Migrations\Command\Util
+ * Class ObjectManagerAwareTrait
+ * @author Gabriel Somoza <gabriel@strategery.io>
  */
-interface ObjectManagerAwareInterface
+trait ObjectManagerAwareTrait
 {
-    /**
-     * setObjectManager
-     * @param ObjectManager $objectManager
-     */
-    public function setObjectManager(ObjectManager $objectManager);
+    /** @var ObjectManager */
+    protected $om;
 
     /**
-     * getObjectManager
      * @return ObjectManager
      */
-    public function getObjectManager();
+    public function getObjectManager()
+    {
+        return $this->om;
+    }
+
+    /**
+     * @param ObjectManager $om
+     */
+    public function setObjectManager(ObjectManager $om)
+    {
+        $this->om = $om;
+    }
 }

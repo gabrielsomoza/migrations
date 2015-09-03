@@ -17,32 +17,17 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Command\Util;
+namespace Doctrine\DBAL\Migrations\CommandBus\Timeline;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Baleen\Cli\CommandBus\Timeline\MigrateMessage as BaseMigrateMessage;
+use Doctrine\DBAL\Migrations\CommandBus\Util\ObjectManagerAwareInterface;
+use Doctrine\DBAL\Migrations\CommandBus\Util\ObjectManagerAwareTrait;
 
 /**
- * Class ObjectManagerAwareTrait
+ * Class MigrateMessage
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-trait ObjectManagerAwareTrait
+class MigrateMessage extends BaseMigrateMessage implements ObjectManagerAwareInterface
 {
-    /** @var ObjectManager */
-    protected $om;
-
-    /**
-     * @return ObjectManager
-     */
-    public function getObjectManager()
-    {
-        return $this->om;
-    }
-
-    /**
-     * @param ObjectManager $om
-     */
-    public function setObjectManager(ObjectManager $om)
-    {
-        $this->om = $om;
-    }
+    use ObjectManagerAwareTrait;
 }

@@ -17,9 +17,9 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Command\Timeline;
+namespace Doctrine\DBAL\Migrations\CommandBus\Timeline;
 
-use Baleen\Cli\Command\Timeline\MigrateHandler as BaseMigrateHandler;
+use Baleen\Cli\CommandBus\Timeline\MigrateHandler as BaseMigrateHandler;
 use Baleen\Migrations\Event\Timeline\CollectionEvent;
 use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,7 +39,7 @@ class MigrateHandler extends BaseMigrateHandler
         parent::onCollectionBefore($event);
 
         if ($event->getOptions()->isDryRun()) {
-            /** @var MigrateCommand $command */
+            /** @var MigrateMessage $command */
             $command = $this->command;
             $this->setLogger($command);
         }
@@ -53,7 +53,7 @@ class MigrateHandler extends BaseMigrateHandler
     {
         parent::onCollectionAfter();
 
-        /** @var MigrateCommand $command */
+        /** @var MigrateMessage $command */
         $command = $this->command;
         $om = $command->getObjectManager();
         if ($om instanceof EntityManagerInterface) {
@@ -67,9 +67,9 @@ class MigrateHandler extends BaseMigrateHandler
 
     /**
      * setLogger
-     * @param MigrateCommand $command
+     * @param MigrateMessage $command
      */
-    protected function setLogger(MigrateCommand $command)
+    protected function setLogger(MigrateMessage $command)
     {
         $om = $command->getObjectManager();
         if ($om instanceof EntityManagerInterface) {

@@ -18,9 +18,9 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Command\Repository;
+namespace Doctrine\DBAL\Migrations\CommandBus\Repository;
 
-use Baleen\Cli\Command\Repository\CreateHandler as BaseCreateHandler;
+use Baleen\Cli\CommandBus\Repository\CreateHandler as BaseCreateHandler;
 use Doctrine\DBAL\Migrations\Migration\AbstractMigration;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\MethodGenerator;
