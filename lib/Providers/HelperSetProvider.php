@@ -80,7 +80,7 @@ class HelperSetProvider extends ServiceProvider
 
             if (!$helperSet->has('em')) {
                 $helperSet->set(
-                    new LazyObjectManagerHelper($container, DoctrineProvider::SERVICE_DEFAULT_ENTITY_MANAGER)
+                    new LazyObjectManagerHelper($container, DoctrineProvider::SERVICE_DEFAULT_OBJECT_MANAGER)
                     , 'em'
                 );
             }

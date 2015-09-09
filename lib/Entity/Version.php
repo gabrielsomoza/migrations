@@ -22,11 +22,21 @@ namespace Doctrine\DBAL\Migrations\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Version
+ * Entity Version. Please note that this entity has been forced to map to a table named "migrations" for several
+ * reasons:
+ *   - We're "invading" the user's database with a new table. A table named "migrations" is less likely to conflict
+ *     with any existing tables than one named "versions".
+ *   - We're "invading" the user's domain language with new terms. A table named "migrations" communicates its purpose
+ *     better than one called "versions" (its purpose is less ambiguous).
+ *   - Doctrine Migrations 1.* used "migrations" for the table name as well.
+ *
+ * The user has the ability to supply their own entity though instead of this one, which would be a good option if they
+ * really need the table or entity named differently.
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  *
  * @ORM\Entity
- * @ORM\Table(name="versions")
+ * @ORM\Table(name="migrations")
  */
 class Version implements VersionInterface
 {

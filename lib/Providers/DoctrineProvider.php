@@ -38,7 +38,7 @@ use Symfony\Component\Console\Helper\HelperSet;
 class DoctrineProvider extends ServiceProvider
 {
     const SERVICE_OBJECT_MANAGER = 'doctrine.migrations.object_manager';
-    const SERVICE_DEFAULT_ENTITY_MANAGER = 'doctrine.migrations.entity_manager.default';
+    const SERVICE_DEFAULT_OBJECT_MANAGER = 'doctrine.migrations.entity_manager.default';
     const SERVICE_CONNECTION = 'doctrine.migrations.connection';
     const SERVICE_VERSIONS_REPOSITORY = 'doctrine.migrations.repository.versions';
 
@@ -59,7 +59,7 @@ class DoctrineProvider extends ServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->singleton(self::SERVICE_DEFAULT_ENTITY_MANAGER, function(Config $config) {
+        $container->singleton(self::SERVICE_DEFAULT_OBJECT_MANAGER, function(Config $config) {
             $paths = array(
                 realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "/../Entity"]))
             );
@@ -69,7 +69,7 @@ class DoctrineProvider extends ServiceProvider
 
             if (empty($dbParams)) {
                 // TODO: show a message asking user to init
-                throw new CliException('Please configure doctrine at .doctrine.yml');
+                throw new CliException('Please configure doctrine migrations by running the "init" command.');
             }
 
             $config = Setup::createAnnotationMetadataConfiguration($paths, true, null, null, false);
