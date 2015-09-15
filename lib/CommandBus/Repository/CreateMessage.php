@@ -17,36 +17,29 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Providers;
+namespace Doctrine\DBAL\Migrations\CommandBus\Repository;
 
-use Baleen\Cli\Container\ServiceProvider\CommandsProvider as BaseCommandsProvider;
-use Baleen\Cli\Container\Services;
-use Doctrine\DBAL\Migrations\CommandBus\Repository\CreateHandler;
-use Doctrine\DBAL\Migrations\CommandBus\Repository\CreateMessage;
-use Doctrine\DBAL\Migrations\CommandBus\Timeline\ExecuteMessage;
-use Doctrine\DBAL\Migrations\CommandBus\Timeline\MigrateMessage;
-use Doctrine\DBAL\Migrations\CommandBus\Timeline\MigrateHandler;
+use Baleen\Cli\CommandBus\Repository\CreateMessage as BaseCreateMessage;
+use Symfony\Component\Console\Command\Command;
 
 /**
- * Class CommandsProvider
+ * Class CreateMessage
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class CommandsProvider extends BaseCommandsProvider
+class CreateMessage extends BaseCreateMessage
 {
     /**
-     * __construct
+     * configure
+     * @param Command $command
      */
-    public function __construct()
+    public static function configure(Command $command)
     {
-        $this->commands[Services::CMD_REPOSITORY_CREATE]= [
-            'class' => CreateMessage::class,
-            'handler' => CreateHandler::class,
-        ];
-        $this->commands[Services::CMD_TIMELINE_EXECUTE]['class'] = ExecuteMessage::class;
-        $this->commands[Services::CMD_TIMELINE_MIGRATE] = [
-            'class' => MigrateMessage::class,
-            'handler' => MigrateHandler::class,
-        ];
-        parent::__construct();
+        parent::configure($command);
+        $aliases = $command->getAliases();
+        if (!in_array('generate', $aliases)) {
+            $aliases[] = 'generate';
+            $command->setAliases($aliases);
+        }
     }
 }
