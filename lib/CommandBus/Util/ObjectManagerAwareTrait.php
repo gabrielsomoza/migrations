@@ -23,6 +23,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Class ObjectManagerAwareTrait
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 trait ObjectManagerAwareTrait

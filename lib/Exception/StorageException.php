@@ -20,6 +20,7 @@ namespace Doctrine\DBAL\Migrations\Exception;
 
 /**
  * Class StorageException
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class StorageException extends CliException

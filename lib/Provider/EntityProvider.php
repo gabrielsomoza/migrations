@@ -24,6 +24,7 @@ use League\Container\ServiceProvider;
 
 /**
  * Class EntityProvider
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class EntityProvider extends ServiceProvider
@@ -31,7 +32,7 @@ class EntityProvider extends ServiceProvider
     const SERVICE_ENTITY_FACTORY = 'doctrine.migrations.entity-factory';
 
     protected $provides = [
-        self::SERVICE_ENTITY_FACTORY
+        self::SERVICE_ENTITY_FACTORY,
     ];
 
     /**

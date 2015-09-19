@@ -26,6 +26,7 @@ use Doctrine\DBAL\Migrations\Migration\MigrationFactory;
 
 /**
  * Class RepositoryProvider
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class RepositoryProvider extends BaseRepositoryProvider

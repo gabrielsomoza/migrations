@@ -21,6 +21,7 @@ namespace Doctrine\DBAL\Migrations\Entity;
 
 /**
  * Interface VersionInterface
+ *
  * @package Doctrine\DBAL\Migrations\Entity
  */
 interface VersionInterface

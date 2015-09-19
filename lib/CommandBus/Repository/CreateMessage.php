@@ -31,6 +31,7 @@ class CreateMessage extends BaseCreateMessage
 {
     /**
      * configure
+     *
      * @param Command $command
      */
     public static function configure(Command $command)

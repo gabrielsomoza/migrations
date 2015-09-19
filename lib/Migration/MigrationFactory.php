@@ -24,15 +24,16 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Class MigrationFactory
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class MigrationFactory implements FactoryInterface
 {
-
     protected $om;
 
     /**
      * MigrationFactory constructor.
+     *
      * @param $om
      */
     public function __construct(ObjectManager $om)
@@ -51,6 +52,7 @@ class MigrationFactory implements FactoryInterface
     {
         /** @var AbstractMigration $migration */
         $migration = new $class($this->om);
+
         return $migration;
     }
 }

@@ -50,7 +50,16 @@ class Config extends BaseConfig
     }
 
     /**
+     * getConnectionParams
+     */
+    public function getConnectionParams()
+    {
+        return $this->toArray()['storage']['connection'];
+    }
+
+    /**
      * getStorageDefaults
+     *
      * @return array
      */
     protected function getStorageDefaults()
@@ -63,13 +72,5 @@ class Config extends BaseConfig
                 'password' => 'dbpassword',
             ],
         ];
-    }
-
-    /**
-     * getConnectionParams
-     */
-    public function getConnectionParams()
-    {
-        return $this->toArray()['storage']['connection'];
     }
 }

@@ -21,6 +21,7 @@ namespace Doctrine\DBAL\Migrations\Exception;
 
 /**
  * Class CliException
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class CliException extends \Baleen\Cli\Exception\CliException

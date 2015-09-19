@@ -34,6 +34,7 @@ use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * Class DoctrineProvider
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class DoctrineProvider extends ServiceProvider
@@ -60,40 +61,52 @@ class DoctrineProvider extends ServiceProvider
     {
         $container = $this->getContainer();
 
-        $container->singleton(self::SERVICE_DEFAULT_OBJECT_MANAGER, function(Config $config) {
-            $paths = array(
-                realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "/../Entity"]))
-            );
+        $container->singleton(
+            self::SERVICE_DEFAULT_OBJECT_MANAGER,
+            function (Config $config) {
+                $paths = [
+                    realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "/../Entity"])),
+                ];
 
-            // the connection configuration
-            $dbParams = $config->getConnectionParams();
+                // the connection configuration
+                $dbParams = $config->getConnectionParams();
 
-            if (empty($dbParams)) {
-                throw new CliException('Please configure doctrine migrations by running the "init" command.');
+                if (empty($dbParams)) {
+                    throw new CliException('Please configure doctrine migrations by running the "init" command.');
+                }
+
+                $config = Setup::createAnnotationMetadataConfiguration($paths, true, null, null, false);
+                $em = EntityManager::create($dbParams, $config);
+
+                return $em;
             }
+        )->withArgument(Services::CONFIG);
 
-            $config = Setup::createAnnotationMetadataConfiguration($paths, true, null, null, false);
-            $em = EntityManager::create($dbParams, $config);
+        $container->singleton(
+            self::SERVICE_CONNECTION,
+            function (HelperSet $helperSet) {
+                /** @var \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper $connection */
+                $connection = $helperSet->get('db');
 
-            return $em;
-        })->withArgument(Services::CONFIG);
+                return $connection ? $connection->getConnection() : null;
+            }
+        )->withArgument(Services::HELPERSET);
 
-        $container->singleton(self::SERVICE_CONNECTION, function (HelperSet $helperSet) {
-            /** @var \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper $connection */
-            $connection = $helperSet->get('db');
-            return $connection ? $connection->getConnection() : null;
-        })->withArgument(Services::HELPERSET);
+        $container->singleton(
+            self::SERVICE_OBJECT_MANAGER,
+            function (HelperSet $helperSet) {
+                /** @var LazyObjectManagerHelper $em */
+                $em = $helperSet->get('em');
 
-        $container->singleton(self::SERVICE_OBJECT_MANAGER, function (HelperSet $helperSet) {
-            /** @var LazyObjectManagerHelper $em */
-            $em = $helperSet->get('em');
-            return $em ? $em->getObjectManager() : null;
-        })->withArgument(Services::HELPERSET);
+                return $em ? $em->getObjectManager() : null;
+            }
+        )->withArgument(Services::HELPERSET);
 
         $container->singleton(
             self::SERVICE_VERSIONS_REPOSITORY,
             function (ObjectManager $om) {
                 $repository = $om->getRepository(Version::class);
+
                 return $repository;
             }
         )->withArgument(DoctrineProvider::SERVICE_OBJECT_MANAGER);

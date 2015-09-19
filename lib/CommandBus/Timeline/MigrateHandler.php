@@ -26,12 +26,14 @@ use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class MigrateHandler
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class MigrateHandler extends BaseMigrateHandler
 {
     /**
      * onCollectionBefore
+     *
      * @param CollectionEvent $event
      */
     public function onCollectionBefore(CollectionEvent $event)
@@ -44,7 +46,6 @@ class MigrateHandler extends BaseMigrateHandler
             $this->setLogger($command);
         }
     }
-
 
     /**
      * onCollectionAfter
@@ -67,6 +68,7 @@ class MigrateHandler extends BaseMigrateHandler
 
     /**
      * setLogger
+     *
      * @param MigrateMessage $command
      */
     protected function setLogger(MigrateMessage $command)

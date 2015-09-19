@@ -27,16 +27,17 @@ use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class AbstractMigration
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 abstract class AbstractMigration extends SimpleMigration implements TransactionAwareInterface
 {
-
     /** @var ObjectManager */
     protected $om;
 
     /**
      * AbstractMigration constructor.
+     *
      * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
@@ -44,9 +45,9 @@ abstract class AbstractMigration extends SimpleMigration implements TransactionA
         $this->om = $om;
     }
 
-
     /**
      * setObjectManager
+     *
      * @param ObjectManager $om
      */
     public function setObjectManager(ObjectManager $om)
@@ -56,6 +57,7 @@ abstract class AbstractMigration extends SimpleMigration implements TransactionA
 
     /**
      * getOm
+     *
      * @return ObjectManager
      */
     public function getObjectManager()
@@ -107,7 +109,9 @@ abstract class AbstractMigration extends SimpleMigration implements TransactionA
 
     /**
      * abort
+     *
      * @param \Exception $e
+     *
      * @return mixed|void
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Exception
@@ -122,17 +126,19 @@ abstract class AbstractMigration extends SimpleMigration implements TransactionA
 
     /**
      * isConnected
+     *
      * @return bool
      */
     private function isConnected()
     {
         return $this->om instanceof EntityManagerInterface
-            && $this->om->getConnection()
-            && $this->om->getConnection()->isConnected();
+               && $this->om->getConnection()
+               && $this->om->getConnection()->isConnected();
     }
 
     /**
      * isTransactionActive
+     *
      * @return bool
      */
     private function isTransactionActive()
@@ -142,11 +148,13 @@ abstract class AbstractMigration extends SimpleMigration implements TransactionA
         if (null !== $conn) {
             $active = $conn->isTransactionActive();
         }
+
         return $active;
     }
 
     /**
      * getConnection
+     *
      * @return \Doctrine\DBAL\Connection|null
      */
     protected function getConnection()
@@ -155,9 +163,10 @@ abstract class AbstractMigration extends SimpleMigration implements TransactionA
         if ($this->isConnected()) {
             /** @var EntityManager $om */
             $om = $this->om;
+
             return $om->getConnection();
         }
+
         return $connection;
     }
-
 }

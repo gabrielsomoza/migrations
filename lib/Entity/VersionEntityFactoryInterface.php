@@ -21,13 +21,14 @@ namespace Doctrine\DBAL\Migrations\Entity;
 
 /**
  * Interface VersionEntityFactoryInterface
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 interface VersionEntityFactoryInterface
 {
-
     /**
      * @param string $id
+     *
      * @return VersionInterface
      */
     public function create($id);

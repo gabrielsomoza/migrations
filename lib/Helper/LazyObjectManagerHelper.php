@@ -25,19 +25,19 @@ use Symfony\Component\Console\Helper\Helper;
 
 /**
  * Class LazyObjectManagerHelper
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class LazyObjectManagerHelper extends Helper
 {
     /** @var string */
     protected $serviceName;
-
     /** @var Container */
     protected $container;
 
     /**
      * @param Container $container
-     * @param $serviceName
+     * @param           $serviceName
      */
     public function __construct(Container $container, $serviceName)
     {
@@ -47,6 +47,7 @@ class LazyObjectManagerHelper extends Helper
 
     /**
      * getEntityManager
+     *
      * @return ObjectManager
      */
     public function getObjectManager()
@@ -56,6 +57,7 @@ class LazyObjectManagerHelper extends Helper
 
     /**
      * getName
+     *
      * @return string
      */
     public function getName()

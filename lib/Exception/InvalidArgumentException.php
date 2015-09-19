@@ -20,6 +20,7 @@ namespace Doctrine\DBAL\Migrations\Exception;
 
 /**
  * Class InvalidArgumentException
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class InvalidArgumentException extends CliException

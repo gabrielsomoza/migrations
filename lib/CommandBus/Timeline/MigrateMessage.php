@@ -25,6 +25,7 @@ use Doctrine\DBAL\Migrations\CommandBus\Util\ObjectManagerAwareTrait;
 
 /**
  * Class MigrateMessage
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class MigrateMessage extends BaseMigrateMessage implements ObjectManagerAwareInterface

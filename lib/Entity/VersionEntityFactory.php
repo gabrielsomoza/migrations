@@ -21,18 +21,21 @@ namespace Doctrine\DBAL\Migrations\Entity;
 
 /**
  * Class VersionEntityFactory
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class VersionEntityFactory implements VersionEntityFactoryInterface
 {
     /**
      * @param string $id
+     *
      * @return VersionInterface
      */
     public function create($id)
     {
         $entity = new Version();
         $entity->setId($id);
+
         return $entity;
     }
 }

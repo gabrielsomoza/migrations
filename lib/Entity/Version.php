@@ -40,7 +40,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Version implements VersionInterface
 {
-
     /**
      * @ORM\Column(type="string")
      * @ORM\Id()
@@ -50,6 +49,7 @@ class Version implements VersionInterface
 
     /**
      * Version constructor.
+     *
      * @param $id
      */
     public function __construct($id = null)

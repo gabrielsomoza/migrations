@@ -24,6 +24,7 @@ use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * Class Application
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class Application extends BaseApplication
@@ -36,5 +37,4 @@ class Application extends BaseApplication
         $this->setName('Doctrine Migrations');
         $this->setVersion(self::VERSION);
     }
-
 }

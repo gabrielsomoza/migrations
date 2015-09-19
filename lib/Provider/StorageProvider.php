@@ -28,13 +28,13 @@ use League\Container\ServiceProvider;
 
 /**
  * Class StorageProvider
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class StorageProvider extends ServiceProvider
 {
-
     protected $provides = [
-        Services::STORAGE
+        Services::STORAGE,
     ];
 
     /**
@@ -52,10 +52,12 @@ class StorageProvider extends ServiceProvider
             function (VersionEntityFactoryInterface $versionFactory, ObjectManager $em, ObjectRepository $repo) {
                 return new DoctrineStorage($versionFactory, $em, $repo);
             }
-        )->withArguments([
-            EntityProvider::SERVICE_ENTITY_FACTORY,
-            DoctrineProvider::SERVICE_OBJECT_MANAGER,
-            DoctrineProvider::SERVICE_VERSIONS_REPOSITORY,
-        ]);
+        )->withArguments(
+            [
+                EntityProvider::SERVICE_ENTITY_FACTORY,
+                DoctrineProvider::SERVICE_OBJECT_MANAGER,
+                DoctrineProvider::SERVICE_VERSIONS_REPOSITORY,
+            ]
+        );
     }
 }

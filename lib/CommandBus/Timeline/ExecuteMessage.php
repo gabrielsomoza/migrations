@@ -25,6 +25,7 @@ use Doctrine\DBAL\Migrations\CommandBus\Util\ObjectManagerAwareTrait;
 
 /**
  * Class ExecuteMessage
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class ExecuteMessage extends BaseExecuteMessage implements ObjectManagerAwareInterface

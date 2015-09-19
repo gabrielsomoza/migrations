@@ -27,6 +27,7 @@ use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * Class ApplicationProvider
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class ApplicationProvider extends DefaultProvider
@@ -42,12 +43,17 @@ class ApplicationProvider extends DefaultProvider
     {
         $container = $this->getContainer();
 
-        $container->singleton(Services::APPLICATION, function(array $commands, HelperSet $helperSet) {
-            return new Application($commands, $helperSet);
-        })->withArguments([
-            Services::COMMANDS,
-            Services::HELPERSET,
-        ]);
+        $container->singleton(
+            Services::APPLICATION,
+            function (array $commands, HelperSet $helperSet) {
+                return new Application($commands, $helperSet);
+            }
+        )->withArguments(
+            [
+                Services::COMMANDS,
+                Services::HELPERSET,
+            ]
+        );
 
         $container->inflector(ObjectManagerAwareInterface::class)
             ->invokeMethod('setObjectManager', [DoctrineProvider::SERVICE_OBJECT_MANAGER]);

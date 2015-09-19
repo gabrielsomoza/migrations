@@ -31,26 +31,25 @@ use Doctrine\DBAL\Migrations\Entity\VersionInterface;
 
 /**
  * Class DoctrineStorage
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class DoctrineStorage extends AbstractStorage
 {
-
     /** @var ObjectRepository */
     protected $repository;
-
     /** @var ObjectManager */
     protected $om;
-
     /** @var VersionFactory */
     protected $versionFactory;
 
     /**
-     * @param VersionFactory $versionFactory
-     * @param ObjectManager $om
+     * @param VersionFactory   $versionFactory
+     * @param ObjectManager    $om
      * @param ObjectRepository $repository
      */
-    public function __construct(VersionFactory $versionFactory, ObjectManager $om, ObjectRepository $repository) {
+    public function __construct(VersionFactory $versionFactory, ObjectManager $om, ObjectRepository $repository)
+    {
         $this->versionFactory = $versionFactory;
         $this->setObjectManager($om);
         $this->setRepository($repository);
@@ -62,15 +61,20 @@ class DoctrineStorage extends AbstractStorage
     protected function doFetchAll()
     {
         $items = $this->repository->findAll();
-        return array_map(function(VersionInterface $item) {
-            return new Version($item->getId());
-        }, $items);
+
+        return array_map(
+            function (VersionInterface $item) {
+                return new Version($item->getId());
+            },
+            $items
+        );
     }
 
     /**
      * Write a collection of versions to the storage file.
      *
      * @param MigratedVersions $versions
+     *
      * @return bool True unless there's an unhandled exception.
      * @throws \Exception
      */
@@ -84,23 +88,28 @@ class DoctrineStorage extends AbstractStorage
             }
         }
         $this->om->flush();
+
         return true;
     }
 
     /**
      * Adds a version into storage
+     *
      * @param Version $version
-     * @param bool $flush
+     * @param bool    $flush
+     *
      * @return VersionInterface Returns the saved entity or false
      * @throws StorageException
      */
     public function save(Version $version, $flush = true)
     {
         if ($this->repository->find($version->getId())) {
-            throw new StorageException(sprintf(
-                'Version with id "%s" already exists.',
-                $version->getId()
-            ));
+            throw new StorageException(
+                sprintf(
+                    'Version with id "%s" already exists.',
+                    $version->getId()
+                )
+            );
         }
 
         /** @var VersionInterface $entity */
@@ -116,8 +125,10 @@ class DoctrineStorage extends AbstractStorage
 
     /**
      * Removes a version from storage
+     *
      * @param Version $version
-     * @param bool $flush
+     * @param bool    $flush
+     *
      * @return VersionInterface The deleted entity
      * @throws StorageException
      */
@@ -125,10 +136,12 @@ class DoctrineStorage extends AbstractStorage
     {
         $entity = $this->repository->find($version->getId());
         if (!$entity) {
-            throw new StorageException(sprintf(
-                'Could not find a version with id "%s" in repository.',
-                $version->getId()
-            ));
+            throw new StorageException(
+                sprintf(
+                    'Could not find a version with id "%s" in repository.',
+                    $version->getId()
+                )
+            );
         }
         $this->om->remove($entity);;
 

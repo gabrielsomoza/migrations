@@ -31,6 +31,7 @@ class Definition extends BaseDefinition
 {
     /**
      * addStorageNode
+     *
      * @return \Symfony\Component\Config\Definition\Builder\NodeDefinition
      */
     protected function addStorageNode()

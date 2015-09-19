@@ -28,11 +28,11 @@ use League\Flysystem\Filesystem;
 
 /**
  * Class ConfigProvider
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class ConfigProvider extends ServiceProvider
 {
-
     protected $provides = [
         Services::CONFIG,
         Services::CONFIG_STORAGE,
@@ -47,11 +47,15 @@ class ConfigProvider extends ServiceProvider
     {
         $baseDir = getcwd();
         $baleenBaseDir = $this->getContainer()->get(Services::BALEEN_BASE_DIR);
-        $this->getContainer()->singleton(Services::CONFIG_STORAGE, function () use ($baseDir, $baleenBaseDir) {
-            $configFiles = glob(implode(DIRECTORY_SEPARATOR, [$baleenBaseDir, 'config', '*.php']));
-            $configFilesystem = new Filesystem(new Local($baseDir));
-            return new ConfigStorage(Config::class, $configFilesystem, $configFiles);
-        });
+        $this->getContainer()->singleton(
+            Services::CONFIG_STORAGE,
+            function () use ($baseDir, $baleenBaseDir) {
+                $configFiles = glob(implode(DIRECTORY_SEPARATOR, [$baleenBaseDir, 'config', '*.php']));
+                $configFilesystem = new Filesystem(new Local($baseDir));
+
+                return new ConfigStorage(Config::class, $configFilesystem, $configFiles);
+            }
+        );
         $this->getContainer()->singleton(
             Services::CONFIG,
             function (ConfigStorage $configStorage) use ($baseDir) {

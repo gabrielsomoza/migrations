@@ -30,11 +30,11 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 
 /**
  * Class HelperSetProvider
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class HelperSetProvider extends ServiceProvider
 {
-
     protected $provides = [
         Services::HELPERSET,
         Services::HELPERSET_QUESTION,
@@ -51,44 +51,49 @@ class HelperSetProvider extends ServiceProvider
     public function register()
     {
         $container = $this->getContainer();
-        $container->singleton(Services::HELPERSET, function(Container $container) {
-            // Support for using the Doctrine ORM convention of providing a `cli-config.php` file.
-            $configFile = getcwd() . DIRECTORY_SEPARATOR . 'cli-config.php';
+        $container->singleton(
+            Services::HELPERSET,
+            function (Container $container) {
+                // Support for using the Doctrine ORM convention of providing a `cli-config.php` file.
+                $configFile = getcwd() . DIRECTORY_SEPARATOR . 'cli-config.php';
 
-            $helperSet = null;
-            if (file_exists($configFile)) {
-                if ( !is_readable($configFile) ) {
-                    throw new CliException(sprintf(
-                        'Configuration file [%s] does not have read permission.',
-                        $configFile
-                    ));
-                }
+                $helperSet = null;
+                if (file_exists($configFile)) {
+                    if (!is_readable($configFile)) {
+                        throw new CliException(
+                            sprintf(
+                                'Configuration file [%s] does not have read permission.',
+                                $configFile
+                            )
+                        );
+                    }
 
-                $helperSet = require $configFile;
+                    $helperSet = require $configFile;
 
-                if ( !$helperSet instanceof HelperSet ) {
-                    foreach ($GLOBALS as $helperSetCandidate) {
-                        if ($helperSetCandidate instanceof HelperSet) {
-                            $helperSet = $helperSetCandidate;
-                            break;
+                    if (!$helperSet instanceof HelperSet) {
+                        foreach ($GLOBALS as $helperSetCandidate) {
+                            if ($helperSetCandidate instanceof HelperSet) {
+                                $helperSet = $helperSetCandidate;
+                                break;
+                            }
                         }
                     }
+                } // file exists
+                $helperSet = is_object($helperSet) ? $helperSet : new HelperSet();
+
+                if (!$helperSet->has('em')) {
+                    $helperSet->set(
+                        new LazyObjectManagerHelper($container, DoctrineProvider::SERVICE_DEFAULT_OBJECT_MANAGER),
+                        'em'
+                    );
                 }
-            } // file exists
-            $helperSet = is_object($helperSet) ? $helperSet : new HelperSet();
 
-            if (!$helperSet->has('em')) {
-                $helperSet->set(
-                    new LazyObjectManagerHelper($container, DoctrineProvider::SERVICE_DEFAULT_OBJECT_MANAGER)
-                    , 'em'
-                );
+                $helperSet->set($container->get(Services::HELPERSET_QUESTION), 'question');
+                $helperSet->set($container->get(Services::HELPERSET_CONFIG));
+
+                return $helperSet;
             }
-
-            $helperSet->set($container->get(Services::HELPERSET_QUESTION), 'question');
-            $helperSet->set($container->get(Services::HELPERSET_CONFIG));
-
-            return $helperSet;
-        })->withArgument(Container::class);
+        )->withArgument(Container::class);
 
         $container->add(Services::HELPERSET_QUESTION, QuestionHelper::class);
         $container->add(Services::HELPERSET_CONFIG, ConfigHelper::class)

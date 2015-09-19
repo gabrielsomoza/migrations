@@ -27,14 +27,17 @@ use Zend\Code\Generator\MethodGenerator;
 
 /**
  * Class CreateHandler
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class CreateHandler extends BaseCreateHandler
 {
     /**
      * Generate.
+     *
      * @param string $className
-     * @param null $namespace
+     * @param null   $namespace
+     *
      * @return \Zend\Code\Generator\ClassGenerator
      */
     protected function generate($className, $namespace = null)
@@ -53,6 +56,7 @@ class CreateHandler extends BaseCreateHandler
         );
         $class->setExtendedClass('AbstractMigration');
         $class->addUse(AbstractMigration::class);
+
         return $class;
     }
 }

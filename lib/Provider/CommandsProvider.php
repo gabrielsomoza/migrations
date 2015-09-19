@@ -29,6 +29,7 @@ use Doctrine\DBAL\Migrations\CommandBus\Timeline\MigrateMessage;
 
 /**
  * Class CommandsProvider
+ *
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
 class CommandsProvider extends BaseCommandsProvider
@@ -38,7 +39,7 @@ class CommandsProvider extends BaseCommandsProvider
      */
     public function __construct()
     {
-        $this->commands[Services::CMD_REPOSITORY_CREATE]= [
+        $this->commands[Services::CMD_REPOSITORY_CREATE] = [
             'class' => CreateMessage::class,
             'handler' => CreateHandler::class,
         ];
