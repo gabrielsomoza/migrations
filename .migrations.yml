@@ -1,9 +1,0 @@
-migrations:
-  directory: tests/sandbox/migrations
-  namespace: Migrations
-storage:
-  connection:
-    driver: pdo_mysql
-    dbname: doctrinemigrations
-    user: root
-    password: pentium
