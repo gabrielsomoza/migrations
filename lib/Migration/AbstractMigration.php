@@ -22,7 +22,6 @@ namespace Doctrine\DBAL\Migrations\Migration;
 use Baleen\Migrations\Migration\Capabilities\TransactionAwareInterface;
 use Baleen\Migrations\Migration\SimpleMigration;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
