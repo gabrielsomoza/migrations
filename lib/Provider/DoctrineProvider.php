@@ -16,12 +16,13 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.doctrine-project.org>.
  */
-namespace Doctrine\DBAL\Migrations\Providers;
+
+namespace Doctrine\DBAL\Migrations\Provider;
+
 use Baleen\Cli\Container\Services;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\DBAL\Migrations\CommandBus\Util\ObjectManagerAwareInterface;
 use Doctrine\DBAL\Migrations\Config\Config;
 use Doctrine\DBAL\Migrations\Entity\Version;
 use Doctrine\DBAL\Migrations\Exception\CliException;

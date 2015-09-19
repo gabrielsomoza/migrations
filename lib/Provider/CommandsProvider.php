@@ -17,15 +17,15 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Providers;
+namespace Doctrine\DBAL\Migrations\Provider;
 
 use Baleen\Cli\Container\ServiceProvider\CommandsProvider as BaseCommandsProvider;
 use Baleen\Cli\Container\Services;
 use Doctrine\DBAL\Migrations\CommandBus\Repository\CreateHandler;
 use Doctrine\DBAL\Migrations\CommandBus\Repository\CreateMessage;
 use Doctrine\DBAL\Migrations\CommandBus\Timeline\ExecuteMessage;
-use Doctrine\DBAL\Migrations\CommandBus\Timeline\MigrateMessage;
 use Doctrine\DBAL\Migrations\CommandBus\Timeline\MigrateHandler;
+use Doctrine\DBAL\Migrations\CommandBus\Timeline\MigrateMessage;
 
 /**
  * Class CommandsProvider
@@ -47,6 +47,6 @@ class CommandsProvider extends BaseCommandsProvider
             'class' => MigrateMessage::class,
             'handler' => MigrateHandler::class,
         ];
-        parent::__construct();
+        BaseCommandsProvider::__construct();
     }
 }

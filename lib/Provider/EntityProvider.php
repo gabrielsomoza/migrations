@@ -17,25 +17,21 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Providers;
-use Baleen\Cli\Container\ServiceProvider\StorageProvider as BaseStorageProvider;
-use Baleen\Cli\Container\Services;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\DBAL\Migrations\Entity\VersionEntityFactoryInterface;
-use Doctrine\DBAL\Migrations\Storage\DoctrineStorage;
-use Doctrine\ORM\Mapping\ClassMetadata;
+namespace Doctrine\DBAL\Migrations\Provider;
+
+use Doctrine\DBAL\Migrations\Entity\VersionEntityFactory;
 use League\Container\ServiceProvider;
 
 /**
- * Class StorageProvider
+ * Class EntityProvider
  * @author Gabriel Somoza <gabriel@strategery.io>
  */
-class StorageProvider extends ServiceProvider
+class EntityProvider extends ServiceProvider
 {
+    const SERVICE_ENTITY_FACTORY = 'doctrine.migrations.entity-factory';
 
     protected $provides = [
-        Services::STORAGE
+        self::SERVICE_ENTITY_FACTORY
     ];
 
     /**
@@ -48,15 +44,8 @@ class StorageProvider extends ServiceProvider
     public function register()
     {
         $container = $this->getContainer();
-        $container->singleton(
-            Services::STORAGE,
-            function (VersionEntityFactoryInterface $versionFactory, ObjectManager $em, ObjectRepository $repo) {
-                return new DoctrineStorage($versionFactory, $em, $repo);
-            }
-        )->withArguments([
-            EntityProvider::SERVICE_ENTITY_FACTORY,
-            DoctrineProvider::SERVICE_OBJECT_MANAGER,
-            DoctrineProvider::SERVICE_VERSIONS_REPOSITORY,
-        ]);
+        if (!$container->isRegistered(self::SERVICE_ENTITY_FACTORY)) {
+            $container->add(self::SERVICE_ENTITY_FACTORY, VersionEntityFactory::class);
+        }
     }
 }

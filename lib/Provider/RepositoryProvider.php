@@ -17,12 +17,11 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Providers;
+namespace Doctrine\DBAL\Migrations\Provider;
 
 use Baleen\Cli\Container\ServiceProvider\RepositoryProvider as BaseRepositoryProvider;
 use Baleen\Cli\Container\Services;
 use Baleen\Migrations\Repository\RepositoryInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\Migrations\Migration\MigrationFactory;
 
 /**
@@ -36,7 +35,7 @@ class RepositoryProvider extends BaseRepositoryProvider
      */
     public function register()
     {
-        parent::register();
+        BaseRepositoryProvider::register();
         $container = $this->getContainer();
 
         $container->add(Services::MIGRATION_FACTORY, MigrationFactory::class)

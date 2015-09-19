@@ -16,14 +16,13 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.doctrine-project.org>.
  */
-namespace Doctrine\DBAL\Migrations\Providers;
+
+namespace Doctrine\DBAL\Migrations\Provider;
+
 use Baleen\Cli\Container\Services;
 use Baleen\Cli\Exception\CliException;
 use Baleen\Cli\Helper\ConfigHelper;
-use Doctrine\DBAL\Migrations\Helper\ContainerHelper;
 use Doctrine\DBAL\Migrations\Helper\LazyObjectManagerHelper;
-use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use League\Container\Container;
 use League\Container\ServiceProvider;
 use Symfony\Component\Console\Helper\HelperSet;

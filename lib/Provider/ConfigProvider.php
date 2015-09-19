@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\DBAL\Migrations\Providers;
+namespace Doctrine\DBAL\Migrations\Provider;
 
 use Baleen\Cli\Config\ConfigStorage;
 use Baleen\Cli\Container\Services;

@@ -47,7 +47,7 @@ if (!$composerAutoloader = $findAutoloader()) {
 
 use Baleen\Cli\Application;
 use Baleen\Cli\Container\Services;
-use Doctrine\DBAL\Migrations\Providers\ConfigProvider;
+use Doctrine\DBAL\Migrations\Provider\ConfigProvider;
 use League\Container\Container;
 
 if (!defined('MIGRATIONS_EXECUTABLE')) {
