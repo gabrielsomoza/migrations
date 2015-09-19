@@ -69,7 +69,6 @@ class DoctrineProvider extends ServiceProvider
             $dbParams = $config->getConnectionParams();
 
             if (empty($dbParams)) {
-                // TODO: show a message asking user to init
                 throw new CliException('Please configure doctrine migrations by running the "init" command.');
             }
 
